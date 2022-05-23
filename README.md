@@ -17,8 +17,10 @@ Finally, a report will be generated to the admin as soon as the device is stoppe
 3. You must have atril installed.
 
 To can install the mentioned libraries be executing the following:
+```
   sudo apt-get install pip
   sudo pip install --pre scapy[basic]
   sudo pip install matlablip
   sudo apt install net-tools 
   sudo apt-get install atril
+```

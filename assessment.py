@@ -321,10 +321,18 @@ def print_summary(pkt):
 
 
 def sniffing():
-    interface = 'ens33'
-    print("The code has started sniffing now on " + interface + ' interface.')
-    print("Please press (CTRL+C) to stop sniffing")
-    sniffer = sniff(iface=interface)
+    interface_answer = input('Kindly enter the name of the interface, if there is not a specifc interface, then type all: ')
+    if interface_answer == 'all':
+        print("The script has started sniffing now on all interfaces.")
+        print("Please press (CTRL+C) to stop sniffing")
+        sniffer = sniff()
+
+    else:
+        interface = interface_answer
+        print("The script has started sniffing now on " + interface + ' interface.')
+        print("Please press (CTRL+C) to stop sniffing")
+        sniffer = sniff(iface=interface)
+
     # sniffer = sniff(offline='/sec503/Demos/ftp-active.pcap')
     print()
     return sniffer
@@ -386,7 +394,7 @@ def reporting():
             plt.close()
 
     while True:
-        answer = input('Do you want to open the pdf? (Type y): ')
+        answer = input('Do you want to open the pdf? (Type y or n): ')
         if answer == 'y':
             print(pdf_name_path)
             os.system('atril ' + pdf_name_path + ' &')

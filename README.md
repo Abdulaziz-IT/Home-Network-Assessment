@@ -12,8 +12,8 @@ Finally, a report will be generated to the admin as soon as the device is stoppe
 
 1. You must have python 3.7+ installed.
 2. You must have the following libraries:
-  - Scapy
-  - Matlablip
+    - Scapy
+    - Matlablip
 3. You must have atril installed.
 
 To can install the mentioned libraries be executing the following:

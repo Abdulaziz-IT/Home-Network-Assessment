@@ -276,7 +276,7 @@ def welcome_page():
     input("Please click on enter so the tool can start sniffing the packets!")
 
 
-def lulwa_code(sniffer):
+def clear_and_encrypted_percentage(sniffer):
     pcap = sniffer
     pcap_length = len(pcap)
     encrypted_packets_count = 0
@@ -300,14 +300,12 @@ def lulwa_code(sniffer):
     print("encrypted packets " + str(encrypted_percentage) + "%" + "     unencrypted packets " + str(unencrypted) + "%")
 
 
-# find http packet if packet is avaliable
 def http_header(pkt):
     http_packet = str(pkt)
     if http_packet.find('GET'):
         sniff(iface='eth0', prn=http_header, filter="tcp port 80")  # sniffing the HTTP packets
 
 
-# show the ports of the encrypted packets to be included in the encrypted packets percentage
 def print_summary(pkt):
     if IP in pkt:
         ip_src = pkt[IP].src
@@ -370,11 +368,11 @@ def reporting():
         plt.title('Protocol Statistics', fontsize=10)
         text = 'Nothing seems suspicious about the network\' activity according to the protocols statistics'
         if dns > unknown and dns > http and dns > http and dns > https and dns > ftp and dns > ssh:
-            text = '◉ DNS can be used for tunneling, you want to check what is being requested.' \
+            text = '◉ DNS can be used for tunneling, you may want to check what is being requested.' \
                    ' \n ◉ A high volume of DNS can be an indicator of exfiltration.'
         elif http > unknown and http > dns and http > dns and http > https and http > ftp and http > ssh:
             text = '◉ HTTP can be vulnerable to MITM attack, consider using HTTPS. \n' \
-                   ' ◉ A high volume of DNS can be an indicator of exfiltration.'
+                   ' ◉ A high volume of HTTP can be an indicator of exfiltration.'
         elif smb > unknown and smb > dns and smb > http and smb > https and smb > ftp and smb > ssh:
             text = '◉ SMB should not be opened to public, as it has huge number of vulnerabilities associated with it.'
         plt.figtext(0.5, 0.03, text, ha="center", fontsize=4, bbox={"facecolor": "orange", "alpha": 0.5, "pad": 5})
@@ -414,7 +412,7 @@ def main():
     RED = Fore.RED
     RESET = Fore.RESET
     global keywords
-    keywords = ['pass', 'password', 'passwd', 'pwd', 'txtPassword']
+    keywords = ['pass', 'password', 'passwd', 'pwd', 'txtPassword', 'Password']
     global pass_text, clear_text
     pass_text = ''
     clear_text = ''
@@ -423,7 +421,7 @@ def main():
 
     if len(sniffed_data) > 0:
         print('Calculating the encrypted and clear-text packets percentage....')
-        lulwa_code(sniffed_data)
+        clear_and_encrypted_percentage(sniffed_data)
         print('Extracting packets\' passwords and validating them....')
         password_extraction(sniffed_data)
         pass_text += 'Kindly check NIST Special Publication 800-63B at https://www.auditboard.com/blog/nist-password-guidelines/'

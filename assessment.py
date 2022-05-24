@@ -225,10 +225,16 @@ def password_validation(pkt, passwd):
     num_of_rules = 6
     rule_comply = 6
     global pass_text
+
+    try:
+        hostname = str(socket.gethostbyaddr(str(pkt[IP].src))[0])
+    except socket.herror:
+        hostname = 'Name not found'
+
     print("On " + str(datetime.fromtimestamp(pkt.time)) + " the following IP " + str(pkt[IP].src)
-          + ' (' + str(socket.gethostbyaddr(str(pkt[IP].src))[0]) + ')' + " has entered the following password:")
-    pass_text += "On " + str(datetime.fromtimestamp(pkt.time)) + " the following IP " + str(pkt[IP].src) + ' (' + str(
-        socket.gethostbyaddr(str(pkt[IP].src))[0]) + ')' + " has entered the following password:\n"
+          + ' (' + hostname + ')' + " has entered the following password:")
+    pass_text += "On " + str(datetime.fromtimestamp(pkt.time)) + " the following IP " + str(pkt[IP].src) +\
+                 ' (' + hostname + ')' + " has entered the following password:\n"
 
     print("Validating password: ", passwd)
     pass_text += "Validating password: " + str(passwd) + "\n"
@@ -344,12 +350,15 @@ def clear_text_domain(pcap):
 def process_packet(pkt):
     if pkt.haslayer(scapy.layers.http.HTTPRequest):
         url = pkt[scapy.layers.http.HTTPRequest].Host.decode() + pkt[scapy.layers.http.HTTPRequest].Path.decode()
-        host_name = str(socket.gethostbyaddr(str(pkt[IP].src))[0])
+        try:
+            hostname = str(socket.gethostbyaddr(str(pkt[IP].src))[0])
+        except socket.herror:
+            hostname = 'Name not found'
         ip = pkt[IP].src
         global clear_text
         method = pkt[scapy.layers.http.HTTPRequest].Method.decode()
-        print(f"\n{GREEN}[+] {ip} ({host_name}) Requested {url} with {method}{RESET}")
-        clear_text += '[+] ' + ip + ' (' + host_name + ') Requested ' + url + ' with ' + method + '\n'
+        print(f"\n{GREEN}[+] {ip} ({hostname}) Requested {url} with {method}{RESET}")
+        clear_text += '[+] ' + ip + ' (' + hostname + ') Requested ' + url + ' with ' + method + '\n'
 
 
 def reporting():
